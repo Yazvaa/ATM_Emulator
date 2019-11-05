@@ -11,4 +11,22 @@ public enum Nominal {
     Nominal(int i) {
         this.nominal=i;
     }
+
+    public Integer getNominal() {
+        return nominal;
+    }
+    public static  Nominal getNominalFromInt(Integer value)
+    {
+        if (value==null) return  null;
+        for(Nominal nominal:values()){
+            if (nominal.nominal.equals(value))
+                return nominal;
+        }
+        return  null;
+    }
+
+    @Override
+    public String toString() {
+        return this.nominal.toString();
+    }
 }
