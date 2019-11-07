@@ -1,11 +1,16 @@
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ATMImplTest {
 
@@ -20,6 +25,13 @@ public class ATMImplTest {
         assertEquals(Nominal.FIVE_HUNDRED, list.get(0));
     }
 
+    @Test
+    public  void testLoadToFile() throws IOException {
+        BufferedReader mockedReader=mock(BufferedReader.class);
+        when(mockedReader.readLine()).thenReturn("100:5").thenReturn("100:5").thenReturn(null);
+        ATMImpl atm=new ATMImpl.ATMImplBuilder().build();
+        atm.setBufferReader(mockedReader);
+    }
     @Test
     public void testOperation(){
         ATMImpl atm = new ATMImpl();

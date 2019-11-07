@@ -5,7 +5,10 @@ import java.util.*;
 public class ATMImpl implements ATM, ATMService {
     private Map<Nominal, Cell> cellMap = new HashMap<Nominal, Cell>();
     private Map<Nominal, List<Cell>> fullCellMap=new HashMap<>();
-
+    private BufferedReader bufferedReader=null;
+    public  void setBufferReader(BufferedReader reader){
+        bufferedReader=reader;
+    }
     public ATMImpl() {
         for (Nominal nominal: Nominal.values()) {
             Cell cell = new CellImpl(nominal, 0);
@@ -15,8 +18,19 @@ public class ATMImpl implements ATM, ATMService {
             fullCellMap.put(nominal,listCell);*/
         }
     }
-
-    public ATMImpl(String fileName) throws IOException {
+    private void loadFromFile(String fileName) throws IOException {
+        List<String> listIni = readIniFile(fileName);
+        if (listIni != null) {
+            for (String str : listIni) {
+                String splitStr[] = str.split(":");
+                Integer count = Integer.parseInt(splitStr[1]);
+                Integer currNominal = Integer.parseInt(splitStr[0]);
+                Cell cell = new CellImpl(Nominal.getNominalFromInt(currNominal), count);
+                cellMap.put(cell.getNominal(), cell);
+            }
+        }
+    }
+    /*public ATMImpl(String fileName) throws IOException {
         List<String> listIni = readIniFile(fileName);
         if (listIni!=null)
         {
@@ -27,12 +41,12 @@ public class ATMImpl implements ATM, ATMService {
                 Integer currNominal=Integer.parseInt(splitStr[0]);
                 Cell cell=new CellImpl(Nominal.getNominalFromInt(currNominal), count);
                 cellMap.put(cell.getNominal(), cell);
-                /*List<Cell> listCell=new ArrayList<>();
+                *//*List<Cell> listCell=new ArrayList<>();
                 listCell.add(cell);
-                fullCellMap.put(cell.getNominal(),listCell);*/
+                fullCellMap.put(cell.getNominal(),listCell);*//*
             }
         }
-    }
+    }*/
     @Override
     public void putCash(List<Nominal> cashList) {
         for (Nominal nominal: cashList) {
@@ -172,5 +186,17 @@ public class ATMImpl implements ATM, ATMService {
         }
         else
             System.out.println("Ячейки с таким номиналом нет!");
+    }
+    public  static class ATMImplBuilder{
+        public static ATMImpl build(){
+            ATMImpl atm=new ATMImpl();
+            return atm;
+        }
+        public static ATMImpl buildFromFile(String fileName) throws IOException {
+            ATMImpl atm=new ATMImpl();
+            atm.cellMap=new HashMap<>();
+            atm.loadFromFile(fileName);
+            return atm;
+        }
     }
 }

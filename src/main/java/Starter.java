@@ -19,8 +19,9 @@ public class Starter {
     public void startAtm(){
         atm=new ATMImpl();
     }
+
     public void startAtm(String fileName) throws IOException {
-        atm=new ATMImpl(fileName);
+       // atm=new ATMImpl(fileName);
     }
     private  void serviceMenu()
     {
